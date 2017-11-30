@@ -15,13 +15,10 @@ class ClientError(OSError):
 
 
 class Client:
-    
     def __init__(self, host, port, timeout=None):
         self.host = str(host)
         self.port = int(port)
-        self.timeout = timeout
-        self.timeout_after_conn = 3.0
-        self.time_difference_metric = 1
+        self.timeout = float(timeout)
     
     @staticmethod
     def parse_server_response(resp, who_call=None):
@@ -70,6 +67,8 @@ class Client:
         if not resp[0]:
             print(resp[1])
             raise ClientError
+        else:
+            print(resp[1])
 
     def get(self, metric):
         message = f"get {metric}\n"
@@ -89,8 +88,14 @@ def main(host, port, timeout):
     client.put("eardrum.cpu", 3, timestamp=1150864250)
     client.put("eardrum.cpu", 4, timestamp=1150864251)
     client.put("eardrum.memory", 4200000)
+    print(client.get("palm.cpu"))
+    print(client.get("eardrum.memory"))
     print(client.get("*"))
-
+    for i in range(0,10):
+        time.sleep(1)
+        print(client.get("eardrum.memory"))
+    print("Client session is closed")
+    
 
 if __name__ == "__main__":
     host = "localhost"
